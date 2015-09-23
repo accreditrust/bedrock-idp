@@ -540,11 +540,4 @@ describe.skip('bedrock-idp non-http authenticated', function() {
   after(function(done) {
     helpers.logout(request, done);
   });
-
-  it('should edit an identity property', function(done) {
-    var identity = config.idp.test.nonHttpTestIdentity;
-    var url = config.server.baseUri + bedrock.config.idp.identityBasePath +
-      '/' + identity.sysSlug;
-    _editIdentityProperty(identity, url, done);
-  });
 });
