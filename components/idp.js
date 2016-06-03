@@ -13,8 +13,7 @@ define([
   './identity/identity',
   './key/key',
   './login/login',
-  './passcode/passcode',
-  './settings/settings'
+  './passcode/passcode'
 ], function(angular) {
 
 'use strict';
@@ -121,12 +120,6 @@ module.config(function($routeProvider, routeResolverProvider) {
     .when(basePath + '/:identity/keys/:keyId', {
       title: 'Key',
       templateUrl: requirejs.toUrl('bedrock-angular-key/key.html')
-    })
-    .when(basePath + '/:identity/settings', {
-      title: 'Settings',
-      session: 'required',
-      templateUrl: requirejs.toUrl(
-        'bedrock-idp/components/settings/settings.html')
     });
 });
 
@@ -136,20 +129,6 @@ module.run(function(
   config, util) {
   brAgreementService.registerGroup('bedrock-idp.join');
   brAuthnService.displayOrder = ['authn-did', 'authn-password'];
-  // FIXME: need a mechanism for display order on the tabs
-  config.settings = config.settings || {};
-  config.settings.panes = config.settings.panes || [];
-  config.settings.panes.push(
-    {
-      templateUrl: modulePath + 'identity/identity-settings.html'
-    },
-    {
-      templateUrl: modulePath + 'key/key-settings.html'
-    }/*,
-    {
-      templateUrl: curatorModulePath + 'key/key-settings.html'
-    }*/
-  );
 
   // FIXME: remove `locationChangeStart` (everything below; replaced with
   // route resolver above) once `queuedRequest` no longer supported
