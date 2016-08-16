@@ -14,7 +14,6 @@ mock.identities = {};
 mock.didDocuments = {};
 
 // TODO: Correct these paths to be more accurate
-var baseIdPath = bedrock.config.server.baseUri;
 var userName = '';
 
 mock.credentialTemplate = {
@@ -54,7 +53,7 @@ userName = 'rsa2048';
 mock.identities[userName] = {};
 mock.identities[userName].identity = createIdentity(userName);
 mock.identities[userName].identity.sysResourceRole.push({
-  sysRole: 'identity.registered'
+  sysRole: 'bedrock-idp.identity.registered'
 });
 // make this identity public
 mock.identities[userName].identity.sysPublic.push('email');
@@ -103,7 +102,7 @@ userName = 'privateIdentity';
 mock.identities[userName] = {};
 mock.identities[userName].identity = createIdentity(userName);
 mock.identities[userName].identity.sysResourceRole.push({
-  sysRole: 'identity.registered'
+  sysRole: 'bedrock-idp.identity.registered'
 });
 mock.identities[userName].keys = createKeyPair({
   userName: userName,
