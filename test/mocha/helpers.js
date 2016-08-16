@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2014-2016 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals after, afterEach, before, beforeEach, it, process, describe,
-  require, should  */
 /* jshint node: true */
 'use strict';
 

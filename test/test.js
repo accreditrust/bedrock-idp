@@ -53,7 +53,7 @@ config.server.host = 'bedrock-idp.dev:36443';
 config.server.baseUri = 'https://' + config.server.host;
 
 // bower package for bedrock-idp-test
-dir = path.join(__dirname);
+var dir = path.join(__dirname);
 config.requirejs.bower.packages.push({
   path: path.join(dir, 'components'),
   manifest: path.join(dir, 'bower.json')
@@ -71,7 +71,7 @@ config.mongodb.local.collection = 'bedrock_idp_dev';
 
 // identity service
 // TODO: owner for local-account management idp disabled
-/*config.idp.owner = {
+/* config.idp.owner = {
   id: config.server.baseUri + config.idp.identityBasePath + '/bedrock'
 };*/
 config.idp.owner = {
@@ -123,11 +123,13 @@ config.views.vars['authorization-io'].registerUrl =
 var permissions = config.permission.permissions;
 var roles = config.permission.roles;
 
-roles['identity.admin'] = {
-  id: 'identity.administrator',
+roles['bedrock-idp.identity.admin'] = {
+  id: 'bedrock-idp.identity.administrator',
   label: 'Identity Administrator',
   comment: 'Role for identity administrators.',
   sysPermission: [
+    permissions.AGREEMENT_ACCESS.id,
+    permissions.AGREEMENT_ACCEPT.id,
     permissions.IDENTITY_ADMIN.id,
     permissions.IDENTITY_ACCESS.id,
     permissions.IDENTITY_INSERT.id,
@@ -142,11 +144,13 @@ roles['identity.admin'] = {
     permissions.IDENTITY_COMPOSE
   ]
 };
-roles['identity.manager'] = {
-  id: 'identity.manager',
+roles['bedrock-idp.identity.manager'] = {
+  id: 'bedrock-idp.identity.manager',
   label: 'Identity Manager',
   comment: 'Role for identity managers.',
   sysPermission: [
+    permissions.AGREEMENT_ACCESS.id,
+    permissions.AGREEMENT_ACCEPT.id,
     permissions.IDENTITY_ACCESS.id,
     permissions.IDENTITY_INSERT.id,
     permissions.IDENTITY_EDIT.id,
@@ -164,16 +168,16 @@ roles['admin'] = {
   id: 'admin',
   label: 'Administrator',
   comment: 'Role for System Administrator.',
-  sysPermission: [].concat(roles['identity.admin'].sysPermission)
+  sysPermission: [].concat(roles['bedrock-idp.identity.admin'].sysPermission)
 };
 
 // default registered identity role (contains all permissions for a regular
 // identity)
-roles['identity.registered'] = {
-  id: 'identity.registered',
+roles['bedrock-idp.identity.registered'] = {
+  id: 'bedrock-idp.identity.registered',
   label: 'Registered Identity',
   comment: 'Role for registered identities.',
-  sysPermission: [].concat(roles['identity.manager'].sysPermission)
+  sysPermission: [].concat(roles['bedrock-idp.identity.manager'].sysPermission)
 };
 
 // defaults for identities
@@ -186,7 +190,7 @@ config.idp.defaults.identity = {
   },
   sysPublic: [],
   sysResourceRole: [{
-    sysRole: 'identity.registered',
+    sysRole: 'bedrock-idp.identity.registered',
     generateResource: 'id'
   }],
   sysStatus: 'active'
