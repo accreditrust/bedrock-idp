@@ -3,8 +3,10 @@
  */
 var pages = global.bedrock.pages || {};
 
-pages.home = require('./home');
-pages.idp = require('./idp');
-pages.join = require('./join');
+pages['bedrock-idp-test'] = {};
+pages['bedrock-idp-test'].home = require('./home');
+pages['bedrock-idp-test'].idp = require('./idp');
+pages['bedrock-idp-test'].join = require('./join');
+pages['bedrock-idp-test'].navbar = require('./navbar');
 
 module.exports = global.bedrock.pages = pages;

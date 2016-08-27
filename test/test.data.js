@@ -157,17 +157,6 @@ config['credentials-mongodb'].provider.credentials.push({
   sysState: 'claimed'
 });
 
-// idp config
-config.idp.defaults.identity.address = [];
-config.idp.defaults.identity.preferences = {
-  type: 'IdentityPreferences'
-};
-config.idp.defaults.identity.sysPublic = [];
-config.idp.defaults.identity.sysResourceRole = [{
-  sysRole: 'identity.registered',
-  generateResource: 'id'
-}];
-
 // identities
 config.idp.identities.push({
   '@context': config.constants.IDENTITY_CONTEXT_V1_URL,

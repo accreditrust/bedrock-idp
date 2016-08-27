@@ -9,12 +9,19 @@ var path = require('path');
 // it can register a bedrock.cli event listener
 require('bedrock-protractor');
 require('bedrock-idp');
+require('bedrock-messages');
 
 var config = bedrock.config;
 var testMode = false;
 
 bedrock.events.on('bedrock.test.configure', function() {
   testMode = true;
+
+  // mongodb config
+  config.mongodb.name = 'bedrock_idp_test';
+  config.mongodb.host = 'localhost';
+  config.mongodb.port = 27017;
+  config.mongodb.local.collection = 'bedrock_idp_test';
 
   // server info
   config.server.port = 36443;
@@ -23,6 +30,8 @@ bedrock.events.on('bedrock.test.configure', function() {
   config.server.domain = 'bedrock-idp.dev';
   config.server.host = 'bedrock-idp.dev:36443';
   config.server.baseUri = 'https://' + config.server.host;
+
+  // bedrock.setHost();
 
   // frontend vars
   config.views.vars.baseUri = config.server.baseUri;
@@ -35,6 +44,10 @@ bedrock.events.on('bedrock.test.configure', function() {
   // remove DID document so that IdP to prevent registration
   // with authorization-io
   delete config.idp.owner.didDocument;
+
+  var protractor = config.protractor.config;
+  protractor.suites['bedrock-idp'] =
+    path.join(__dirname, 'protractor', 'tests', '**', '*.js');
 });
 
 bedrock.events.on('bedrock.configure', function() {
@@ -52,16 +65,14 @@ config.server.domain = 'bedrock-idp.dev';
 config.server.host = 'bedrock-idp.dev:36443';
 config.server.baseUri = 'https://' + config.server.host;
 
+// bedrock.setHost();
+
 // bower package for bedrock-idp-test
 var dir = path.join(__dirname);
 config.requirejs.bower.packages.push({
   path: path.join(dir, 'components'),
   manifest: path.join(dir, 'bower.json')
 });
-
-var protractor = config.protractor.config;
-protractor.suites['bedrock-idp'] =
-  path.join(__dirname, 'protractor', 'tests', '**', '*.js');
 
 // mongodb config
 config.mongodb.name = 'bedrock_idp_dev';
@@ -83,7 +94,9 @@ config['credential-curator'].credentialSigningPublicKey.id =
 // FIXME: store this securely
 config.idp.owner.privateKey =
   config['credential-curator'].credentialSigningPrivateKey;
-config.idp.owner.didRegistrationUrl = 'https://authorization.dev:33443/dids';
+config.idp.owner.didRegistrationUrl =
+  'https://authorizationio-mattcollier.c9users.io:8080/dids/';
+  // 'https://authorization.dev:33443/dids';
 config.idp.owner.didDocument = {
   '@context': 'https://w3id.org/identity/v1',
   id: config.idp.owner.id,
@@ -108,13 +121,15 @@ config.idp.owner.registerWithStrictSSL = false;
 
 // credential curator
 config['credential-curator']['authorization-io'].baseUrl =
-  'https://authorization.dev:33443/dids/';
+  // 'https://authorization.dev:33443/dids/';
+  'https://authorizationio-mattcollier.c9users.io:8080/dids/';
 
 // frontend vars
 config.views.vars.baseUri = config.server.baseUri;
 config.views.vars['authorization-io'] = {};
 config.views.vars['authorization-io'].baseUri =
-  'https://authorization.dev:33443';
+  // 'https://authorization.dev:33443';
+  'https://authorizationio-mattcollier.c9users.io:8080';
 config.views.vars['authorization-io'].agentUrl =
   config.views.vars['authorization-io'].baseUri + '/agent';
 config.views.vars['authorization-io'].registerUrl =
@@ -135,13 +150,15 @@ roles['bedrock-idp.identity.admin'] = {
     permissions.IDENTITY_INSERT.id,
     permissions.IDENTITY_EDIT.id,
     permissions.IDENTITY_REMOVE.id,
+    permissions.PUBLIC_KEY_ACCESS.id,
     permissions.PUBLIC_KEY_CREATE.id,
+    permissions.PUBLIC_KEY_EDIT.id,
     permissions.PUBLIC_KEY_REMOVE.id,
-    permissions.CREDENTIAL_ADMIN,
-    permissions.CREDENTIAL_ACCESS,
-    permissions.CREDENTIAL_INSERT,
-    permissions.CREDENTIAL_REMOVE,
-    permissions.IDENTITY_COMPOSE
+    permissions.CREDENTIAL_ADMIN.id,
+    permissions.CREDENTIAL_ACCESS.id,
+    permissions.CREDENTIAL_INSERT.id,
+    permissions.CREDENTIAL_REMOVE.id,
+    permissions.IDENTITY_COMPOSE.id
   ]
 };
 roles['bedrock-idp.identity.manager'] = {
@@ -154,12 +171,15 @@ roles['bedrock-idp.identity.manager'] = {
     permissions.IDENTITY_ACCESS.id,
     permissions.IDENTITY_INSERT.id,
     permissions.IDENTITY_EDIT.id,
+    permissions.PUBLIC_KEY_ACCESS.id,
     permissions.PUBLIC_KEY_CREATE.id,
+    permissions.PUBLIC_KEY_EDIT.id,
     permissions.PUBLIC_KEY_REMOVE.id,
-    permissions.CREDENTIAL_ACCESS,
-    permissions.CREDENTIAL_INSERT,
-    permissions.CREDENTIAL_REMOVE,
-    permissions.IDENTITY_COMPOSE
+    permissions.CREDENTIAL_ACCESS.id,
+    permissions.CREDENTIAL_INSERT.id,
+    permissions.CREDENTIAL_REMOVE.id,
+    permissions.IDENTITY_COMPOSE.id,
+    permissions.MESSAGE_ACCESS.id
   ]
 };
 
@@ -227,5 +247,9 @@ config.views.vars.contextMap['https://w3id.org/identity/v1'] =
   config.server.baseUri + '/contexts/identity-v1.jsonld';
 config.views.vars.contextMap['https://w3id.org/credentials/v1'] =
   config.server.baseUri + '/contexts/credentials-v1.jsonld';
+
+// minify
+config.views.vars.minify = false;
+config.protractor.config.mochaOpts.timeout = 240000;
 
 bedrock.start();

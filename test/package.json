@@ -4,7 +4,8 @@
   "description": "Bedrock Identity Provider",
   "main": "./lib/idp",
   "scripts": {
-    "test": "node ./test/test.js test"
+    "test": "node --preserve-symlinks ./test.js test --framework mocha",
+    "postinstall": "ln -s ../.. node_modules/bedrock-idp"
   },
   "repository": {
     "type": "git",
@@ -42,7 +43,8 @@
     "bedrock-key": "^3.0.0",
     "bedrock-key-http": "^2.0.0",
     "bedrock-mail": "^2.0.0",
-    "bedrock-mongodb": "^3.0.0",
+    "bedrock-messages": "^0.1.1",
+    "bedrock-mongodb": "digitalbazaar/bedrock-mongodb#checkAuth",
     "bedrock-passport": "^3.0.0",
     "bedrock-permission": "^2.3.0",
     "bedrock-requirejs": "^2.0.0",
