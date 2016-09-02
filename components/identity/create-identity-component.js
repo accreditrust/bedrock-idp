@@ -85,8 +85,6 @@ function Ctrl(
       $location.url(config.data.idp.identityBasePath + '/' +
         session.identity.sysSlug + '/dashboard' + referred);
     }).catch(function(err) {
-      console.log('EEEEEEEEEEEEEEE', err.name);
-      console.log('EEEEEEEEEEEEEEE', err.message);
       brAlertService.add('error', err);
       self.loading = false;
     }).then(function() {
